@@ -54,5 +54,6 @@ TARGET_UNIFIED_DEVICE := true
 
 #BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 
-BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
+# Marvell policy first, device policy last (device rules use Marvell types)
 -include device/marvell/sepolicy/sepolicy.mk
+BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
