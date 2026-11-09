@@ -1,0 +1,5 @@
+# Marvell modem AT command distributor (/system/bin/at_distributor),
+# started by init.pxa1908.tel.rc. Rules for it live in fix.te.
+type at_distributor, domain;
+type at_distributor_exec, exec_type, file_type;
+init_daemon_domain(at_distributor)
