@@ -149,8 +149,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libstagefright_soft_h264dec \
     libstagefright_soft_h264enc \
-#    libstagefrighthw \
-    libMrvlOmx \
+    libstagefrighthw
+# libMrvlOmx.so itself is the stock blob (vendor tree), not this module.
 
 # Shims
 PRODUCT_PACKAGES += \

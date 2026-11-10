@@ -1,0 +1,3 @@
+# CODA7542 hardware video codec (/dev/uio0). On N the OMX components run in
+# the mediacodec process instead of mediaserver.
+allow mediacodec uio_device:chr_file rw_file_perms;
