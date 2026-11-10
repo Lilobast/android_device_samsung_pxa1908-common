@@ -3,6 +3,15 @@
 ifeq ($(BOARD_PROVIDES_LIBRIL),true)
 
 LOCAL_PATH:= $(call my-dir)
+
+ifeq ($(TARGET_USES_STOCK_RIL),true)
+# The stock libril.so is installed from the vendor tree; only export the header.
+include $(CLEAR_VARS)
+LOCAL_COPY_HEADERS_TO := libril
+LOCAL_COPY_HEADERS := ril_ex.h
+include $(BUILD_COPY_HEADERS)
+else
+
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= \
@@ -59,4 +68,5 @@ LOCAL_MODULE:= libril_static
 
 include $(BUILD_STATIC_LIBRARY)
 endif # ANDROID_BIONIC_TRANSITION
+endif # TARGET_USES_STOCK_RIL
 endif # BOARD_PROVIDES_LIBRIL

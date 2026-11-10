@@ -155,7 +155,8 @@ PRODUCT_PACKAGES += \
 # Shims
 PRODUCT_PACKAGES += \
     libui_shim \
-    libutils_shim
+    libutils_shim \
+    libril_shim
 
 # Permissions
 PRODUCT_COPY_FILES += \
