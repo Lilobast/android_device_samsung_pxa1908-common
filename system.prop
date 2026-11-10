@@ -10,3 +10,7 @@ debug.hwui.window_buffer_age=true
 
 debug.falsing_log=true
 debug.falsing_logcat=true
+
+# Stock camera HAL hands video frames to the encoder as raw fds (L style):
+# run OMX in mediaserver, next to the camera, so the fds stay valid.
+media.stagefright.codecremote=false
