@@ -1,0 +1,6 @@
+# Vendor daemons whose needs are not fully known yet stay permissive (userdebug only).
+permissive marvelltel;
+permissive at_distributor;
+permissive rtcc;
+permissive gpslpm_srv;
+permissive mwirelessd;

@@ -1,2 +1,12 @@
 type io_device, dev_type;
 type efs_block_device, dev_type;
+
+# Marvell CP (modem) channels: IPC, AT/data ttys, CP memory, NVM socket, error handler
+type mrvl_cp_device, dev_type;
+# Marvell SD8777 combo: FM and debug char devices
+type mrvl_wireless_device, dev_type;
+type rfkill_device, dev_type;
+# Marvell QoS/devfreq request nodes (cpu/ddr/gpu/vpu min/max)
+type mrvl_qos_device, dev_type;
+# NVM (modem NV data) partition
+type mrvl_nvm_block_device, dev_type;

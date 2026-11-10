@@ -1,0 +1,57 @@
+# aosp_fixes: rules for AOSP domains from denials logged on coreprimevelte (2026-11-11)
+
+# Bluetooth: Marvell SD8777 HCI char device; rfkill
+allow bluetooth hci_attach_dev:chr_file rw_file_perms;
+allow bluetooth rfkill_device:chr_file rw_file_perms;
+allow wpa rfkill_device:chr_file r_file_perms;
+allow system_server rfkill_device:chr_file rw_file_perms;
+
+# e2fsck on the NVM partition (init.pxa1908.tel.rc)
+allow fsck mrvl_nvm_block_device:blk_file rw_file_perms;
+
+# init: Marvell modem/GPS/TZ setup writes, service sockets
+allow init gps_device:chr_file { write ioctl };
+allow init tz_device:chr_file { write ioctl };
+allow init socket_device:sock_file { create setattr };
+allow init self:netlink_kobject_uevent_socket { create bind read };
+
+# Camera HAL (stock, runs in mediaserver): media controller/subdevs, OTP calibration cache
+allow mediaserver video_device:chr_file rw_file_perms;
+allow mediaserver camera_data_file:dir create_dir_perms;
+allow mediaserver camera_data_file:file create_file_perms;
+
+# GPS HAL (system_server): AT-GPS channel to the CP, IPC device, socket dir
+allow system_server at_device:chr_file rw_file_perms;
+allow system_server mrvl_cp_device:chr_file rw_file_perms;
+allow system_server gps_data_file:dir create_dir_perms;
+allow system_server gps_data_file:sock_file create_file_perms;
+
+# rild (libsec-ril)
+allow rild self:capability dac_read_search;
+
+# Note: system_app -> netd binder (Settings) is a core AOSP neverallow; that denial is harmless.
+
+# --- round 2 ---
+# Camera HAL sets/reads its own service.camera.* properties
+set_prop(mediaserver, mrvl_camera_prop)
+
+# Marvell GPS HAL (libagps_hal, GpsChipInit thread in system_server) runs shell commands
+allow system_server shell_exec:file { rx_file_perms execute_no_trans };
+allow system_server toolbox_exec:file { rx_file_perms execute_no_trans };
+
+# Harmless: audio HAL debug playback dump, system_server stat of /init
+dontaudit audioserver system_data_file:file { append open read };
+dontaudit system_server init_exec:file getattr;
+
+# --- round 3 ---
+# Vivante GPU node lives in /dev/graphics (galcore): every GPU user must search the dir, or the
+# blob fails to open the device and corrupts memory (crash storm seen when enforcing).
+allow { appdomain bootanim surfaceflinger system_server mediaserver cameraserver } graphics_device:dir search;
+
+# rild (libsec-ril): modem boot channel, NV data in /efs (labels from the stock policy are unknown here;
+# /efs is not relabelled to keep that partition untouched)
+allow rild at_device:chr_file { open ioctl };
+allow rild unlabeled:file open;
+
+# init: Marvell embms socket cleanup
+allow init socket_device:sock_file unlink;

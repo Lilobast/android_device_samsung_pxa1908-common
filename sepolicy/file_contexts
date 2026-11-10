@@ -42,3 +42,62 @@
 # WiFi
 /data/.wifiver.info                                           u:object_r:wifi_data_file:s0
 /efs/wifi/.mac.info                                           u:object_r:wifi_efs_file:s0
+
+# Marvell CP (modem) channels
+/dev/acipc                       u:object_r:mrvl_cp_device:s0
+/dev/amipc                       u:object_r:mrvl_cp_device:s0
+/dev/cpmem                       u:object_r:mrvl_cp_device:s0
+/dev/msocket(_dump)?             u:object_r:mrvl_cp_device:s0
+/dev/seh                         u:object_r:mrvl_cp_device:s0
+/dev/ccidatastub                 u:object_r:mrvl_cp_device:s0
+/dev/cctdev[0-9]+                u:object_r:mrvl_cp_device:s0
+/dev/cctdatadev[0-9]+            u:object_r:mrvl_cp_device:s0
+/dev/cidatatty[0-9]+             u:object_r:mrvl_cp_device:s0
+/dev/citty[0-9]+                 u:object_r:mrvl_cp_device:s0
+/dev/ppprd                       u:object_r:mrvl_cp_device:s0
+/dev/ttymodem[0-9]+              u:object_r:mrvl_cp_device:s0
+/dev/ttydiag[0-9]+               u:object_r:mrvl_cp_device:s0
+/dev/diag_dump                   u:object_r:mrvl_cp_device:s0
+/dev/hwmap                       u:object_r:mrvl_cp_device:s0
+/dev/ramfile                     u:object_r:mrvl_cp_device:s0
+/dev/simple_dip                  u:object_r:mrvl_cp_device:s0
+/dev/block/platform/soc.2/by-name/NVM   u:object_r:mrvl_nvm_block_device:s0
+
+# Marvell SD8777: BT (HCI over char dev), FM, debug; rfkill
+/dev/mbtchar[0-9]+               u:object_r:hci_attach_dev:s0
+/dev/mfmchar[0-9]+               u:object_r:mrvl_wireless_device:s0
+/dev/mdebugchar[0-9]+            u:object_r:mrvl_wireless_device:s0
+/dev/rfkill                      u:object_r:rfkill_device:s0
+
+# Camera (B52 ISP media controller and subdevices)
+/dev/media[0-9]+                 u:object_r:video_device:s0
+/dev/v4l-subdev[0-9]+            u:object_r:video_device:s0
+
+# USB gadget serial
+/dev/ttyGS[0-9]+                 u:object_r:gadget_serial_device:s0
+
+# Marvell QoS / devfreq request nodes
+/dev/(axi|cci|clst_vl)_min                       u:object_r:mrvl_qos_device:s0
+/dev/cpu_(freq|num)(_[bl])?_(max|min)            u:object_r:mrvl_qos_device:s0
+/dev/(ddr|vpu)_devfreq_(max|min)                 u:object_r:mrvl_qos_device:s0
+/dev/gpu_freq_(2d|3d|sh)_(max|min)               u:object_r:mrvl_qos_device:s0
+
+# Marvell CP daemons (started by init / tel_launch.sh)
+/system/bin/eeh                  u:object_r:mrvl_tel_exec:s0
+/system/bin/nvm                  u:object_r:mrvl_tel_exec:s0
+/system/bin/diag                 u:object_r:mrvl_tel_exec:s0
+/system/bin/IMLLog               u:object_r:mrvl_tel_exec:s0
+/system/bin/cploader             u:object_r:mrvl_tel_exec:s0
+
+# Camera HAL calibration data (/data/log/camera/merged_otp_*.data)
+/data/log/camera(/.*)?           u:object_r:camera_data_file:s0
+
+# Partition nodes (by-name aliases are not applied on this device; numbers from by-name links)
+/dev/block/mmcblk0p6             u:object_r:efs_block_device:s0
+/dev/block/mmcblk0p8             u:object_r:recovery_block_device:s0
+/dev/block/mmcblk0p9             u:object_r:boot_block_device:s0
+/dev/block/mmcblk0p13            u:object_r:mrvl_nvm_block_device:s0
+/dev/block/mmcblk0p15            u:object_r:frp_block_device:s0
+/dev/block/mmcblk0p16            u:object_r:system_block_device:s0
+/dev/block/mmcblk0p17            u:object_r:cache_block_device:s0
+/dev/block/mmcblk0p19            u:object_r:userdata_block_device:s0
