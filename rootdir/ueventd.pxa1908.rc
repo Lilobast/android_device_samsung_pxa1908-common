@@ -73,6 +73,7 @@
 
 # nfc
 /dev/mnfcchar* 0660 system nfc
+/dev/bcm2079x 0660 nfc nfc
 
 # gpu customize frequency
 /sys/devices/platform/galcore/gpu/gpu0/gpufreq userspace/customize_rate 0644 system root

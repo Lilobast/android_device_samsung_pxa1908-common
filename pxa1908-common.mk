@@ -247,9 +247,13 @@ PRODUCT_PACKAGES += \
     libgpucsc \
 
 # NFC
-#PRODUCT_PACKAGES += \
-    Nfc-nci \
+PRODUCT_PACKAGES += \
+    NfcNci \
     Tag \
+    com.android.nfc_extras
+
+PRODUCT_COPY_FILES += \
+    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
 # FMRadio
 PRODUCT_PACKAGES += \
