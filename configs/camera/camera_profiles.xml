@@ -317,7 +317,7 @@
              previewbufcnt="9" stillbufcnt="3"
              videobufcnt="9"
              maxpreviewwidth="1280" maxpreviewheight="720"
-             horviewangle="50"   verviewangle="50"
+             horviewangle="55"   verviewangle="50"
              productname="SM-G361F"/>
          <PreviewConfig>
              <PreviewFormat format="yuv420sp"/>
@@ -360,7 +360,7 @@
              previewbufcnt="9" stillbufcnt="3"
              videobufcnt="9"
              maxpreviewwidth="1280" maxpreviewheight="720"
-             horviewangle="50"   verviewangle="50"
+             horviewangle="60"   verviewangle="50"
              productname="SM-G361F"/>
          <PreviewConfig>
              <PreviewFormat format="yuv420sp"/>

@@ -15,6 +15,7 @@
  */
 
 #include <cstdlib>
+#include <string.h>
 #include <hardware/camera_common.h>
 #include <hardware/hardware.h>
 
@@ -67,32 +68,41 @@ extern "C" {
 
 static int camera_get_number_of_cameras()
 {
-    return 0;
-
-    int res = 0;
-    // Make sure we don't call this in the same time as other threads
+    // The stock HAL re-probes the sensors on every call; a second probe on N
+    // reports a wrong count and crashes, so ask it once and cache the answer.
+    static int cached = -1;
     pthread_mutex_lock(&camera_mutex);
-    if( camera_mrvl.iNumOfSensors )
-    {
-        if( *camera_mrvl.iNumOfSensors != 2 )
-            camera_mrvl.camera_get_number_of_cameras();
-
-        res = *camera_mrvl.iNumOfSensors;
+    if (cached < 0 && camera_mrvl.camera_get_number_of_cameras) {
+        cached = camera_mrvl.camera_get_number_of_cameras();
+        ALOGI("%s: stock HAL reports %d camera(s)", __func__, cached);
     }
+    int res = cached < 0 ? 0 : cached;
     pthread_mutex_unlock(&camera_mutex);
     return res;
 }
 
 static int camera_get_camera_info(int id, struct camera_info* info)
 {
-    //return camera_mrvl.camera_get_camera_info(id, info);
-    return -EINVAL;
+    if (!camera_mrvl.camera_get_camera_info || !info)
+        return -EINVAL;
+    // The stock (API 1.0) HAL only fills facing/orientation; clear the rest for N.
+    memset(info, 0, sizeof(*info));
+    int res = camera_mrvl.camera_get_camera_info(id, info);
+    info->device_version = CAMERA_DEVICE_API_VERSION_1_0;
+    ALOGI("%s: id %d facing %d orientation %d -> %d", __func__, id, info->facing,
+          info->orientation, res);
+    return res;
 }
 
 static int camera_device_open(const hw_module_t* mod, const char* name, hw_device_t** dev)
 {
-    //return camera_mrvl.camera_open_dev(mod, name, dev);
-    return -EINVAL;
+    (void)mod;
+    if (!camera_mrvl.camera_open_dev || !camera_mrvl.HMI)
+        return -EINVAL;
+    // Hand the stock HAL its own module so its internal checks match.
+    int res = camera_mrvl.camera_open_dev(&camera_mrvl.HMI->common, name, dev);
+    ALOGI("%s: camera %s -> %d", __func__, name, res);
+    return res;
 }
 
 static hw_module_methods_t gCameraModuleMethods = {
