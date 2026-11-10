@@ -3,9 +3,10 @@ ro.telephony.ril.config=simactivation
 hwc.overlay.enable=0
 hwc.virtual.gcu.enable=0
 
-# Vivante EGL reports a wrong EGL_BUFFER_AGE_EXT on N -> HWUI partial redraws
-# leave stale areas (flickering toolbars). Redraw full frames instead.
-debug.hwui.use_buffer_age=false
+# Vivante EGL always reports EGL_BUFFER_AGE_EXT = 1 (real age is 3 with triple
+# buffering) -> HWUI partial redraws left stale areas (flickering toolbars).
+# Patched HWUI takes the age from the window's BufferQueue instead.
+debug.hwui.window_buffer_age=true
 
 debug.falsing_log=true
 debug.falsing_logcat=true
