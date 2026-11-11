@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -33,12 +34,26 @@ void init_target_properties()
 void property_override(char const prop[], char const value[])
 {
     prop_info *pi;
+    size_t len = strlen(value);
+
+    if (len >= PROP_VALUE_MAX) {
+        LOG(ERROR) << "property_override: value of " << prop << " too long, not set";
+        return;
+    }
 
     pi = (prop_info*) __system_property_find(prop);
-    if (pi)
-        __system_property_update(pi, value, strlen(value));
-    else
-        __system_property_add(prop, strlen(prop), value, strlen(value));
+    if (pi) {
+        // Pie stores ro.* values of PROP_VALUE_MAX chars or more out of line ("long" property).
+        // __system_property_update() would write over the entry and keep the long flag, so later
+        // reads follow a garbage offset (init crashed in strlen expanding ${ro.build.fingerprint}).
+        if (GetProperty(prop, "").size() >= PROP_VALUE_MAX) {
+            LOG(ERROR) << "property_override: " << prop << " is a long property, not overridden";
+            return;
+        }
+        __system_property_update(pi, value, len);
+    } else {
+        __system_property_add(prop, strlen(prop), value, len);
+    }
 }
 
 static int read_file2(const char *fname, char *data, int max_size)
