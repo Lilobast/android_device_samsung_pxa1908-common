@@ -57,3 +57,6 @@ TARGET_UNIFIED_DEVICE := true
 # Marvell policy first, device policy last (device rules use Marvell types)
 -include device/marvell/sepolicy/sepolicy.mk
 BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
+
+# LiveDisplay tint is applied by hwcomposer.mrvl; SurfaceFlinger covers GLES-only frames
+TARGET_HWC_LIVEDISPLAY_TINT := true
