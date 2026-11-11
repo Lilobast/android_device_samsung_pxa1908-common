@@ -380,16 +380,7 @@ service rtccd /system/bin/rtccd3 -a 350m -x 0.5
     user root
     oneshot
 
-# Bluetooth PAN
-service dhcpcd_bt-pan /system/bin/dhcpcd -BKL
-    class main
-    disabled
-    oneshot
-
-service iprenew_bt-pan /system/bin/dhcpcd -n
-    class main
-    disabled
-    oneshot
+# Bluetooth PAN: Pie serves DHCP from the framework (dhcpcd was removed)
 
 on property:ro.boot.lcd=1080_50
     setprop ro.sf.lcd_density 240
