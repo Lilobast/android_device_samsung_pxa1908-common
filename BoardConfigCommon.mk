@@ -74,3 +74,9 @@ TARGET_HWC_LIVEDISPLAY_TINT := true
 # SIGSEGV (fault at 0x78, then a second fault inside the handler, no tombstone) ~1 s after every
 # Wi-Fi connect -> boot loop while Wi-Fi is on. Code compiled on the device works.
 WITH_DEXPREOPT := false
+
+# Pie: HIDL HALs provided by the device
+DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
+
+# Pie: the framework only talks to wpa_supplicant/hostapd over HIDL
+WPA_SUPPLICANT_USE_HIDL := true

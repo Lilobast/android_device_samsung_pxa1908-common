@@ -27,3 +27,16 @@ LOCAL_MODULE := libril_shim
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := cutilsshim.c
+LOCAL_SHARED_LIBRARIES := libcutils
+LOCAL_MODULE := libcutils_shim
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := camparamsshim.cpp
+LOCAL_MODULE := libcamera_parameters_shim
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_SHARED_LIBRARY)

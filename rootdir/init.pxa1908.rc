@@ -5,7 +5,7 @@ import init.pxa1908.security.rc
 import init.wifi.rc
 
 on early-init
-    export LD_SHIM_LIBS "/system/lib/libui.so|libui_shim.so:/system/lib/libutils.so|libutils_shim.so:/system/lib/libwvm.so|libwvm_shim.so"
+    # Pie: shims come from TARGET_LD_SHIM_LIBS (BoardConfig.mk)
 on init
     symlink /dev/block/platform/soc.2/d4200000.axi/d4281000.sdh/by-name /dev/block/platform/soc.2/by-name
 
@@ -432,10 +432,10 @@ on property:ro.debug_level=0x4f4c
     # set ring buf size to 4KB * 4 = 16KB
     write /sys/kernel/debug/tracing/buffer_size_kb 4
 
-service charger /sbin/healthd -c
+service charger /sbin/charger
     class charger
     critical
-    seclabel u:r:healthd:s0
+    seclabel u:r:charger:s0
 #    class_start sec_charger
 
 # LPM

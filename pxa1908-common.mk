@@ -155,6 +155,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libui_shim \
     libutils_shim \
+    libcutils_shim \
+    libcamera_parameters_shim \
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -272,3 +274,6 @@ PRODUCT_COPY_FILES += \
 
 # Inherit from mrvl-common
 $(call inherit-product, device/samsung/mrvl-common/mrvl-common.mk)
+
+# Pie HIDL HAL wrappers
+$(call inherit-product, $(LOCAL_PATH)/hidl.mk)
