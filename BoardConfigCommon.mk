@@ -60,3 +60,9 @@ BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
 
 # LiveDisplay tint is applied by hwcomposer.mrvl; SurfaceFlinger covers GLES-only frames
 TARGET_HWC_LIVEDISPLAY_TINT := true
+
+
+# No dexpreopt: with host-compiled (WITH_DEXPREOPT) framework/services code, system_server died with a
+# SIGSEGV (fault at 0x78, then a second fault inside the handler, no tombstone) ~1 s after every
+# Wi-Fi connect -> boot loop while Wi-Fi is on. Code compiled on the device works.
+WITH_DEXPREOPT := false

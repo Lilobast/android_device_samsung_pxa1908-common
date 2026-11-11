@@ -68,3 +68,6 @@ dontaudit rild logcat_exec:file execute;
 # and audioserver had.
 allow { system_server audioserver } { app_efs_file cpk_efs_file imei_efs_file prov_efs_file sec_efs_file }:dir r_dir_perms;
 allow { system_server audioserver } { app_efs_file cpk_efs_file imei_efs_file prov_efs_file sec_efs_file }:file r_file_perms;
+
+# Phone app stats /data/user_de/0/com.android.settings (harmless)
+dontaudit radio system_app_data_file:dir getattr;
