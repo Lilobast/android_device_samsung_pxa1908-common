@@ -14,3 +14,11 @@ debug.falsing_logcat=true
 # Stock camera HAL hands video frames to the encoder as raw fds (L style):
 # run OMX in mediaserver, next to the camera, so the fds stay valid.
 media.stagefright.codecremote=false
+
+# Radio (values from stock G361F build.prop)
+# run_composite.sh enables the Samsung IPC channels (ssipc_misc ssipc_ch_enable) before the CP boots
+# only when this is true; without it umts_ipc0/umts_rfs0 never receive anything (RADIO_UNAVAILABLE).
+ro.cmd.ssipc_enable=true
+persist.radio.rem.enable=0
+ril.stk.sim.profile=FFFFFFFF7F0F009F7F00001FE200000003
+ril.stk.usim.profile=FFFFFFFF7F9F00DFFF00001FE2000000C3E00000000148005100000000080000
