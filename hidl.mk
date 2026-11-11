@@ -66,3 +66,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     wificond
+
+# LiveDisplay (colour calibration through the HW composer, sys.livedisplay.rgb)
+PRODUCT_PACKAGES += \
+    vendor.lineage.livedisplay@2.0-service.pxa1908

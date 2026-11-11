@@ -1,0 +1,5 @@
+service vendor.livedisplay-hal-2-0-pxa1908 /vendor/bin/hw/vendor.lineage.livedisplay@2.0-service.pxa1908
+    interface vendor.lineage.livedisplay@2.0::IDisplayColorCalibration default
+    class hal
+    user system
+    group system

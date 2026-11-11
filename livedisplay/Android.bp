@@ -1,0 +1,19 @@
+// LiveDisplay HAL for PXA1908: colour calibration applied by the hardware composer
+cc_binary {
+    name: "vendor.lineage.livedisplay@2.0-service.pxa1908",
+    defaults: ["hidl_defaults"],
+    init_rc: ["vendor.lineage.livedisplay@2.0-service.pxa1908.rc"],
+    relative_install_path: "hw",
+    vendor: true,
+    srcs: [
+        "DisplayColorCalibration.cpp",
+        "service.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+        "libhidlbase",
+        "libhidltransport",
+        "libutils",
+        "vendor.lineage.livedisplay@2.0",
+    ],
+}
