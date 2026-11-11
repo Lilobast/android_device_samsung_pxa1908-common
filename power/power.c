@@ -346,11 +346,13 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
             }
         }
         break;
+#ifdef POWER_HINT_SET_PROFILE
     case POWER_HINT_SET_PROFILE:
         pthread_mutex_lock(&lock);
         set_power_profile(*(int32_t *)data);
         pthread_mutex_unlock(&lock);
         break;
+#endif
     case POWER_HINT_LOW_POWER:
         /* This hint is handled by the framework */
         break;

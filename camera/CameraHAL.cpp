@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <cstdlib>
 #include <string.h>
 #include <hardware/camera_common.h>
