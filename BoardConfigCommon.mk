@@ -23,6 +23,9 @@ TARGET_SYSTEM_PROP := $(COMMON_PATH)/system.prop
 
 # RIL
 BOARD_PROVIDES_LIBRIL := true
+# Enables hardware/samsung/ril/libril (Pie HIDL radio service for Samsung RILs).
+# TODO(RIL bring-up): check the signal strength format of the Marvell libsec-ril.
+BOARD_MODEM_TYPE := xmm6262
 ANDROID_MULTI_SIM := true
 ANDROID_SIM_COUNT_2 := true
 
@@ -42,8 +45,8 @@ BOARD_USE_MARVELL_ION := true
 # CMHW
 BOARD_HARDWARE_CLASS += $(COMMON_PATH)/cmhw
 
-# Custom RIL class
-BOARD_RIL_CLASS := ../../../$(COMMON_PATH)/ril_class
+# Custom RIL class: the N-era SamsungRIL class does not fit the Pie (HIDL) RIL; disabled.
+#BOARD_RIL_CLASS := ../../../$(COMMON_PATH)/ril_class
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
@@ -55,9 +58,13 @@ TARGET_UNIFIED_DEVICE := true
 #BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 
 # Marvell policy first, device policy last (device rules use Marvell types)
--include device/marvell/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
-
+# Pie: the Qualcomm-derived common/ and test/ policies of device/marvell/sepolicy are not used;
+# only its pxa1908 file labels. Device rules live in $(COMMON_PATH)/sepolicy.
+#BOARD_SEPOLICY_DIRS += device/marvell/sepolicy/pxa1908
+# Pie bring-up: AOSP policy only, SELinux permissive (androidboot.selinux=permissive in
+# BoardConfig.mk). The 14.1 device policy depends on the Qualcomm-derived Marvell policy and
+# is being rewritten for Pie (notes/los16_port_plan.md).
+#BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
 # LiveDisplay tint is applied by hwcomposer.mrvl; SurfaceFlinger covers GLES-only frames
 TARGET_HWC_LIVEDISPLAY_TINT := true
 

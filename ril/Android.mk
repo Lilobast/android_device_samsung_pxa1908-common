@@ -1,3 +1,1 @@
-LOCAL_PATH := $(call my-dir)
-
-include $(call first-makefiles-under,$(LOCAL_PATH))
+# Pie: libril comes from hardware/samsung/ril (HIDL). The N-era libril here is not built.
