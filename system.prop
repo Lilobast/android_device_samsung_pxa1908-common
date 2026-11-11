@@ -25,3 +25,7 @@ ril.stk.usim.profile=FFFFFFFF7F9F00DFFF00001FE2000000C3E000000001480051000000000
 
 # Pie: no egl.cfg; the loader looks for libEGL_<ro.hardware.egl>.so
 ro.hardware.egl=MRVL
+
+# Pie: the kernel sdcardfs is the old Samsung one (rejects Pie mount options);
+# use the FUSE sdcard daemon (sdcard_fuse_oreo.patch)
+ro.sys.sdcardfs=false
