@@ -34,9 +34,9 @@ LOCAL_SHARED_LIBRARIES := \
 	liblog \
 	libsync \
 	libutils \
-	libmvmem
+	libmvmem \
+	libcamera_client
 
-LOCAL_STATIC_LIBRARIES := libcamera_parameters
 
 LOCAL_CFLAGS += -Wall -Wextra -fvisibility=hidden
 
