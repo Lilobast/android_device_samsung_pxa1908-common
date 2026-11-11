@@ -1,4 +1,6 @@
 on init
+    # Pie adbd uses AIO on FunctionFS; this 3.14 f_fs has none (io_submit fails, adb loops offline).
+    setprop sys.usb.ffs.aio_compat 1
     write /sys/class/android_usb/android0/f_acm/instances 1
     write /sys/class/android_usb/android0/iSerial ${ro.serialno}
     write /sys/class/android_usb/android0/f_rndis/manufacturer Samsung
