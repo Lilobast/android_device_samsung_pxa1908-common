@@ -10,6 +10,12 @@ on init
     chmod 0660 /dev/ttyGS0
     chown system system /dev/ttyGS0
 
+    # Pie adbd only speaks FunctionFS: back the "adb" gadget function with ffs
+    mkdir /dev/usb-ffs 0770 shell shell
+    mkdir /dev/usb-ffs/adb 0770 shell shell
+    mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
+    write /sys/class/android_usb/android0/f_ffs/aliases adb
+
 on boot
     write /sys/class/android_usb/android0/iSerial ${ro.serialno}
     write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
@@ -236,3 +242,13 @@ on property:sys.usb.config=charge_only,adb
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
 
+
+# Pie bring-up: adb as early as possible, before post-fs-data (which can block on
+# vdc/vold over binder or on mrdloader). The gadget enables itself once adbd is ready.
+on post-fs
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 04e8
+    write /sys/class/android_usb/android0/idProduct 6860
+    write /sys/class/android_usb/android0/functions adb
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
