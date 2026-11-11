@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     PXA1908: there is no hardware colour calibration, so LiveDisplay tints the
-     screen through a SurfaceFlinger colour matrix, which forces GPU composition
-     (the HW composer is skipped). Default LiveDisplay to off so the HWC is used;
-     users can still enable it (night tint) in Settings.
+     PXA1908: LiveDisplay colour calibration is applied by the HW composer
+     (cmhw DisplayColorCalibration -> sys.livedisplay.rgb -> hwcomposer.mrvl),
+     so the tint no longer forces GPU composition. Use the usual default.
 -->
 <resources>
     <!-- 0 = off, 1 = night, 2 = auto, 3 = outdoor, 4 = day -->
-    <integer name="config_defaultLiveDisplayMode">0</integer>
+    <integer name="config_defaultLiveDisplayMode">2</integer>
 </resources>
