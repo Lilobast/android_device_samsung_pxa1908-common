@@ -22,10 +22,11 @@ include $(COMMON_PATH)/board/*.mk
 TARGET_SYSTEM_PROP := $(COMMON_PATH)/system.prop
 
 # RIL
-BOARD_PROVIDES_LIBRIL := true
-# Enables hardware/samsung/ril/libril (Pie HIDL radio service for Samsung RILs).
-# TODO(RIL bring-up): check the signal strength format of the Marvell libsec-ril.
-BOARD_MODEM_TYPE := xmm6262
+# Pie: AOSP libril (hardware/ril). hardware/samsung libril maps Samsung OEM requests/unsols by
+# table position with Exynos/Shannon numbering; this Marvell libsec-ril numbers them differently
+# (e.g. GET_CELL_BROADCAST_CONFIG 10008 vs 10001). AOSP libril ignores unknown OEM unsols.
+# TODO(RIL bring-up): check standard request structs; else a Samsung libril with our tables.
+BOARD_PROVIDES_LIBRIL := false
 ANDROID_MULTI_SIM := true
 ANDROID_SIM_COUNT_2 := true
 
