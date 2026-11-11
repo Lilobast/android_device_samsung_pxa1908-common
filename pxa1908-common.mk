@@ -277,3 +277,7 @@ $(call inherit-product, device/samsung/mrvl-common/mrvl-common.mk)
 
 # Pie HIDL HAL wrappers
 $(call inherit-product, $(LOCAL_PATH)/hidl.mk)
+
+# Seccomp: extra syscalls for the Lollipop codec blobs in media.codec
+PRODUCT_COPY_FILES += \
+    device/samsung/pxa1908-common/seccomp/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy

@@ -1,0 +1,7 @@
+# pxa1908: syscalls the Lollipop Marvell/Samsung codec blobs make in media.codec that Pie's
+# mediacodec policy does not allow (seccomp would kill the process).
+# libsavsvc, libsomxhevcdsw, libippmultiexec (software video codecs, thread pinning)
+sched_getaffinity: 1
+sched_setaffinity: 1
+# libgputex
+unlinkat: 1

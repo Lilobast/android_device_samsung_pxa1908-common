@@ -1,0 +1,19 @@
+// 2D-engine (libgcu) copies for the PXA1908 video path. libgcu.so is loaded at run time.
+cc_library_static {
+    name: "libmrvl_gcucopy",
+    vendor_available: true,
+    srcs: ["MrvlGcuCopy.cpp"],
+    export_include_dirs: ["include"],
+    local_include_dirs: ["include"],
+    include_dirs: ["hardware/marvell/libprebuilt/pxa1908/libgcu/include"],
+    shared_libs: [
+        "libcutils",
+        "libdl",
+        "liblog",
+    ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wno-unused-parameter",
+    ],
+}
