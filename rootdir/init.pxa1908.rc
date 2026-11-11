@@ -169,6 +169,8 @@ on fs
     mkdir /NVM 0744 system system
     # mount /data by fstab to support encryption.
     mount_all /fstab.pxa1908
+    # Bring-up: keep the kernel log on /cache (readable from TWRP after a panic or reboot).
+    start bringup_kmsg
 
     mount debugfs debugfs /sys/kernel/debug
 
@@ -500,3 +502,11 @@ on property:persist.sys.debug.dump=mid
 
 on property:persist.sys.debug.dump=high
     write /sys/power/panic CRASH_ENABLE
+
+# Bring-up only (LOS16): copies the kernel log to /cache every second, so a boot that ends in a
+# kernel panic or reboot leaves /cache/kmsg_live.txt (previous boot: /cache/kmsg_prev.txt).
+service bringup_kmsg /system/bin/sh -c "mv /cache/kmsg_live.txt /cache/kmsg_prev.txt; while true; do dmesg > /cache/kmsg_live.tmp; mv /cache/kmsg_live.tmp /cache/kmsg_live.txt; sync; sleep 1; done"
+    user root
+    group root
+    disabled
+    oneshot
