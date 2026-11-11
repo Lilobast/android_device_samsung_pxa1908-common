@@ -219,6 +219,9 @@ on post-fs-data
     # Broadcom NFC stack storage (NFA_STORAGE in libnfc-brcm.conf)
     mkdir /data/bcmnfc 0700 nfc nfc
 
+    # rild data (label from our file_contexts; the directory may predate it)
+    restorecon_recursive /data/misc/radio
+
     #Power Meter: for duty cycle profiling
     chown system system /sys/kernel/debug/pxa/stat/cpu_dc_stat
     chown system system /sys/kernel/debug/pxa/stat/ddr_dc_stat

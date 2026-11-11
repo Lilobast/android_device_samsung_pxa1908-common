@@ -3,3 +3,9 @@ type sysfs_camera, fs_type, sysfs_type;
 type sysfs_display, fs_type, sysfs_type;
 type sysfs_vibeamp, fs_type, sysfs_type;
 type wifi_efs_file, file_type;
+# Types the stock policy put on /efs (the labels are stored on the EFS partition itself).
+type app_efs_file, file_type;
+type cpk_efs_file, file_type;
+type imei_efs_file, file_type;
+type prov_efs_file, file_type;
+type sec_efs_file, file_type;

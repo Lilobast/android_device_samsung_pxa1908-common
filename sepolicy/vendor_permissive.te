@@ -4,3 +4,4 @@ permissive at_distributor;
 permissive rtcc;
 permissive gpslpm_srv;
 permissive mwirelessd;
+permissive at_router;
