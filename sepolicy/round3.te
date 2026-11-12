@@ -1,0 +1,38 @@
+# Round 3: remaining permissive-mode denials on LOS16 (2026-11-12)
+
+# Runtime PM of the display controller and the aksm block (power HAL on screen on/off)
+type sysfs_mrvl_pm, fs_type, sysfs_type;
+allow hal_power_default sysfs_mrvl_pm:dir r_dir_perms;
+allow hal_power_default sysfs_mrvl_pm:file rw_file_perms;
+
+# Audio HAL: gain calibration on the NVM partition (stock labels there are unknown to us)
+allow hal_audio_default nvm_data_file:dir r_dir_perms;
+allow hal_audio_default { nvm_data_file unlabeled }:file r_file_perms;
+allow fsck nvm_data_file:dir getattr;
+
+# NFC HAL and service keep their state in /data/nfc (labelled nfc_data_file)
+allow hal_nfc_default nfc_data_file:dir rw_dir_perms;
+allow hal_nfc_default nfc_data_file:file create_file_perms;
+
+# GNSS HAL chmods its dirs
+allow hal_gnss_default gps_data_file:dir create_dir_perms;
+
+# init: chown/chmod of battery sysfs nodes in rc
+allow init sysfs_batteryinfo:file setattr;
+
+# rild keeps files in /data/misc/radio
+allow rild radio_data_file:dir rw_dir_perms;
+allow rild radio_data_file:file create_file_perms;
+dontaudit rild logcat_exec:file rx_file_perms;
+
+# No dexpreopt: system_server runs the compiled framework jars from the dalvik cache
+allow system_server dalvikcache_data_file:file execute;
+
+# Harmless
+dontaudit mediaserver hal_lineage_camera_motor_hwservice:hwservice_manager find;
+dontaudit webview_zygote zygote:unix_dgram_socket write;
+
+# Bluetooth HAL reads the MAC address from /efs/bluetooth/bt_addr (crashed without it when enforcing)
+allow hal_bluetooth_default efs_file:dir search;
+allow hal_bluetooth_default { efs_file bluetooth_efs_file }:dir r_dir_perms;
+allow hal_bluetooth_default { efs_file bluetooth_efs_file }:file r_file_perms;

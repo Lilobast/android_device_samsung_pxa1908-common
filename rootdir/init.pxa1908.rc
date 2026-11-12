@@ -228,6 +228,7 @@ on post-fs-data
     restorecon_recursive /data/gps
     restorecon_recursive /data/system/gps
     restorecon_recursive /data/log/camera
+    restorecon_recursive /data/nfc
 
     #Power Meter: for duty cycle profiling
     chown system system /sys/kernel/debug/pxa/stat/cpu_dc_stat

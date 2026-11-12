@@ -25,3 +25,7 @@ genfscon sysfs /devices/platform/soc.2/d4200000.axi/d4281000.sdh/mmc_host/mmc0/m
 
 # Vivante per-process GPU memory (memtrack HAL)
 genfscon proc /driver/gcmem                                                                           u:object_r:proc_gcmem:s0
+
+# Display controller / aksm runtime PM (power HAL)
+genfscon sysfs /devices/platform/aksm/power                                                            u:object_r:sysfs_mrvl_pm:s0
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/mmp-disp/power                                       u:object_r:sysfs_mrvl_pm:s0
