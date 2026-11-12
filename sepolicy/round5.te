@@ -12,3 +12,8 @@ allow init sysfs_lowmemorykiller:file w_file_perms;
 # TWRP leaves unlabelled files in /cache/recovery after every flash; restorecon_recursive skips
 # the dir once its digest is recorded, so let system_server delete them as AOSP intends.
 allow system_server unlabeled:file unlink;
+
+# Marvell libraries with text relocations (libippsp, libarac): the audio HAL (audio.primary.mrvl ->
+# libacoustic) and the software HEVC decoder in media.codec need execmod, or dlopen fails and the
+# primary audio module never loads (no sound at all). Pie does not log this denial.
+allow { hal_audio_default mediacodec } system_file:file execmod;
