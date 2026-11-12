@@ -17,3 +17,9 @@ allow system_server unlabeled:file unlink;
 # libacoustic) and the software HEVC decoder in media.codec need execmod, or dlopen fails and the
 # primary audio module never loads (no sound at all). Pie does not log this denial.
 allow { hal_audio_default mediacodec } system_file:file execmod;
+
+# The modem diag daemon (permissive domain) polls the USB gadget state ~once a second; the denials
+# were logged every time (~57 audit lines/min). Allow the two harmless reads.
+allow mrvl_tel sysfs_android_usb:dir search;
+allow mrvl_tel sysfs_android_usb:file r_file_perms;
+allow mrvl_tel self:netlink_kobject_uevent_socket { create bind read };
