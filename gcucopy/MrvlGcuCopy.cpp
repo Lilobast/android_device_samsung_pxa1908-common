@@ -197,9 +197,14 @@ void *MrvlGcuCopy::createSurface(void *context, const void *addr, size_t len, si
                 GCU_TRUE, (void *)addr, GCU_FALSE, 0);
     }
     static int sLogged = 0;
+    static int sFailLogged = 0;
     if (sLogged < 4) {
         sLogged++;
         ALOGI("surface %p+%zu: %s -> %p", addr, len, physical ? "physical" : "virtual", surf);
+    } else if (surf == NULL && sFailLogged < 4) {
+        sFailLogged++;
+        ALOGW("surface %p+%zu (%s, phys 0x%08x) failed: %d", addr, len,
+                physical ? "physical" : "virtual", physical ? phys : 0, sGcu.getError());
     }
     return surf;
 }
@@ -256,7 +261,9 @@ bool MrvlGcuCopy::copyPlane(const void *src, size_t srcStride, void *dst, size_t
 }
 
 bool MrvlGcuCopy::copyLinear(const void *src, void *dst, size_t len) {
-    size_t rows = len / kLinearRow;
+    // libgcu refuses wrapped surfaces with an odd row count (GCU_INVALID_PARAMETER for 765
+    // rows); keep it a multiple of 16 and copy the few leftover rows with the CPU.
+    size_t rows = (len / kLinearRow) & ~(size_t)15;
     if (rows == 0) {
         return false;
     }
