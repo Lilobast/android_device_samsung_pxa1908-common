@@ -26,6 +26,8 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <pthread.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <utils/Log.h>
@@ -93,6 +95,90 @@ static int sysfs_write_int(char *path, int value)
     char buf[80];
     snprintf(buf, 80, "%d", value);
     return sysfs_write_str(path, buf);
+}
+
+/*
+ * GPU / DDR interaction boost. The 3D GPU, the 2D engine (all HWC composition) and the DDR
+ * bus start every gesture at their lowest clock and their governors react late: the
+ * notification shade ran at ~30 fps with 65 ms p90 frames, 34 ms with the clocks held up.
+ * On interaction/launch the minimum clocks are raised for BOOST_MS, then put back.
+ */
+#define GPU_PATH "/sys/devices/platform/soc.2/d4200000.axi/c0400000.gpu/gpu/"
+#define GPU3D_MIN GPU_PATH "gpu0/gpufreq/scaling_min_freq"
+#define GPU2D_MIN GPU_PATH "gpu1/gpufreq/scaling_min_freq"
+#define DDR_MIN "/sys/class/devfreq/devfreq-ddr/min_freq"
+#define GPU3D_BOOST 624000
+#define GPU2D_BOOST 416000
+#define DDR_BOOST 416000
+#define CLK_FLOOR 156000
+#define BOOST_MS 1500
+
+static pthread_mutex_t boost_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t boost_cond = PTHREAD_COND_INITIALIZER;
+static struct timespec boost_until;
+static bool boost_thread_started = false;
+
+static void set_clock_floor(bool boost)
+{
+    sysfs_write_int(GPU3D_MIN, boost ? GPU3D_BOOST : CLK_FLOOR);
+    sysfs_write_int(GPU2D_MIN, boost ? GPU2D_BOOST : CLK_FLOOR);
+    sysfs_write_int(DDR_MIN, boost ? DDR_BOOST : CLK_FLOOR);
+}
+
+static bool ts_before(const struct timespec *a, const struct timespec *b)
+{
+    return a->tv_sec < b->tv_sec || (a->tv_sec == b->tv_sec && a->tv_nsec < b->tv_nsec);
+}
+
+static void *boost_thread(__attribute__((unused)) void *arg)
+{
+    pthread_mutex_lock(&boost_lock);
+    for (;;) {
+        /* Idle: wait for a boost request. */
+        while (boost_until.tv_sec == 0)
+            pthread_cond_wait(&boost_cond, &boost_lock);
+        pthread_mutex_unlock(&boost_lock);
+        set_clock_floor(true);
+        pthread_mutex_lock(&boost_lock);
+        /* Boosted: wait until the (possibly extended) deadline has passed. */
+        for (;;) {
+            struct timespec now;
+            clock_gettime(CLOCK_MONOTONIC, &now);
+            if (!ts_before(&now, &boost_until))
+                break;
+            struct timespec until = boost_until;
+            pthread_cond_timedwait_monotonic_np(&boost_cond, &boost_lock, &until);
+        }
+        boost_until.tv_sec = 0;
+        boost_until.tv_nsec = 0;
+        pthread_mutex_unlock(&boost_lock);
+        set_clock_floor(false);
+        pthread_mutex_lock(&boost_lock);
+    }
+    return NULL;
+}
+
+static void clock_boost(void)
+{
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    now.tv_sec += BOOST_MS / 1000;
+    now.tv_nsec += (long)(BOOST_MS % 1000) * 1000000L;
+    if (now.tv_nsec >= 1000000000L) {
+        now.tv_sec++;
+        now.tv_nsec -= 1000000000L;
+    }
+    pthread_mutex_lock(&boost_lock);
+    if (!boost_thread_started) {
+        pthread_t t;
+        if (pthread_create(&t, NULL, boost_thread, NULL) == 0) {
+            pthread_detach(t);
+            boost_thread_started = true;
+        }
+    }
+    boost_until = now;
+    pthread_cond_signal(&boost_cond);
+    pthread_mutex_unlock(&boost_lock);
 }
 
 static bool check_governor(void)
@@ -329,6 +415,8 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
         if (!profiles[current_power_profile].boostpulse_duration)
             return;
 
+        clock_boost();
+
         // break out early if governor is not interactive
         if (!check_governor()) return;
 
@@ -353,6 +441,11 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
         pthread_mutex_unlock(&lock);
         break;
 #endif
+    case POWER_HINT_LAUNCH:
+        if (is_profile_valid(current_power_profile)
+                && profiles[current_power_profile].boostpulse_duration)
+            clock_boost();
+        break;
     case POWER_HINT_LOW_POWER:
         /* This hint is handled by the framework */
         break;
