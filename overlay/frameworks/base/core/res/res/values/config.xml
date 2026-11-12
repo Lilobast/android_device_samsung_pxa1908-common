@@ -214,4 +214,7 @@
 
     <!-- Whether to enable HumanInteractionController by default -->
     <bool name="config_HICEnabledDefault">false</bool>
+    <!-- CameraService runs in mediaserver (TARGET_HAS_LEGACY_CAMERA_HAL1 / NO_CAMERA_SERVER):
+         accept its camera state reports (otherwise "Calling UID 1013 doesn't match"). -->
+    <bool name="config_allowMediaUidForCameraServiceProxy">true</bool>
 </resources>
