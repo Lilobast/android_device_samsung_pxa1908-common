@@ -1,0 +1,18 @@
+# Round 4: first enforcing boot (2026-11-12)
+
+# HWC (in surfaceflinger) reads hardware vsync from the framebuffer device
+type sysfs_mrvl_vsync, fs_type, sysfs_type;
+allow surfaceflinger sysfs_mrvl_vsync:file rw_file_perms;
+
+# init chowns the runtime PM nodes in rc
+allow init sysfs_mrvl_pm:file setattr;
+
+# kernel threads create device nodes in devtmpfs
+allow kernel device:dir { write add_name };
+allow kernel device:chr_file { create setattr };
+allow kernel device:blk_file { create setattr };
+allow kernel self:capability { chown fowner fsetid mknod };
+
+# Not needed: libgps chmods /data/system, libsec-ril chmods its logs in /data/log
+dontaudit hal_gnss_default system_data_file:dir setattr;
+dontaudit rild system_data_file:file setattr;

@@ -29,3 +29,11 @@ genfscon proc /driver/gcmem                                                     
 # Display controller / aksm runtime PM (power HAL)
 genfscon sysfs /devices/platform/aksm/power                                                            u:object_r:sysfs_mrvl_pm:s0
 genfscon sysfs /devices/platform/soc.2/d4200000.axi/mmp-disp/power                                       u:object_r:sysfs_mrvl_pm:s0
+
+# More runtime PM nodes the power HAL toggles (framebuffer, VDMA) and the touch key enable
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/fbbase.3/power                                     u:object_r:sysfs_mrvl_pm:s0
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/d4209000.vdma/power                                 u:object_r:sysfs_mrvl_pm:s0
+genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4013800.i2c/i2c-3/3-0050/input/input1/enabled         u:object_r:sysfs_mrvl_pm:s0
+
+# HWC vsync (surfaceflinger)
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/fbbase.3/vsync                                     u:object_r:sysfs_mrvl_vsync:s0
