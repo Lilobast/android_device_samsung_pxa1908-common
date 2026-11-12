@@ -1,49 +1,22 @@
-# at_distributor
+# Marvell / Samsung vendor daemons
 /system/bin/at_distributor        u:object_r:at_distributor_exec:s0
-# at_router
 /system/bin/at_router             u:object_r:at_router_exec:s0
-
-# Runtime compress cache daemon
 /system/bin/rtccd3                u:object_r:rtcc_exec:s0
-
-# Marvell telephony launcher
 /system/bin/tel_launch\.sh        u:object_r:marvelltel_exec:s0
+/system/bin/tel_lpm\.sh           u:object_r:marvelltel_exec:s0
 /system/bin/run_composite\.sh     u:object_r:marvelltel_exec:s0
-
-# Marvell Wireless Daemon (enabled WiFi/BT/NFC/FM modem)
 /system/bin/MarvellWirelessDaemon u:object_r:mwirelessd_exec:s0
-
-# Marvell gps daemon
 /system/bin/gpslpm_srv            u:object_r:gpslpm_srv_exec:s0
+/system/bin/eeh                   u:object_r:mrvl_tel_exec:s0
+/system/bin/nvm                   u:object_r:mrvl_tel_exec:s0
+/system/bin/nvm-aponly            u:object_r:mrvl_tel_exec:s0
+/system/bin/diag                  u:object_r:mrvl_tel_exec:s0
+/system/bin/IMLLog                u:object_r:mrvl_tel_exec:s0
+/system/bin/cploader              u:object_r:mrvl_tel_exec:s0
+/(vendor|system/vendor)/bin/hw/vendor\.lineage\.livedisplay@2\.0-service\.pxa1908  u:object_r:hal_lineage_livedisplay_pxa1908_exec:s0
 
-# Bluetooth
-/efs/bluetooth/bt_addr                                        u:object_r:bluetooth_efs_file:s0
-
-# Camera
-/sys/devices/virtual/camera(/.*)?                             u:object_r:sysfs_camera:s0
-
-# EFS
-/dev/block/platform/soc.2/by-name/EFS                   u:object_r:efs_block_device:s0
-
-# NFC
-/dev/sec-nfc                                                    u:object_r:nfc_device:s0
-/dev/bcm2079x                                                   u:object_r:nfc_device:s0
-/data/bcmnfc(/.*)?                                              u:object_r:nfc_data_file:s0
-
-# Galcore
-/dev/galcore u:object_r:gpu_device:s0
-/dev/graphics/galcore u:object_r:gpu_device:s0
-
-# Sensors
-/dev/accelerometer_sensor       u:object_r:sensors_device:s0
-/dev/magnetic_sensor            u:object_r:sensors_device:s0
-/dev/proximity_sensor           u:object_r:sensors_device:s0
-
-# WiFi
-/data/.wifiver.info                                           u:object_r:wifi_data_file:s0
-/efs/wifi/.mac.info                                           u:object_r:wifi_efs_file:s0
-
-# Marvell CP (modem) channels
+# Modem
+/dev/umts_.*                     u:object_r:at_device:s0
 /dev/acipc                       u:object_r:mrvl_cp_device:s0
 /dev/amipc                       u:object_r:mrvl_cp_device:s0
 /dev/cpmem                       u:object_r:mrvl_cp_device:s0
@@ -61,7 +34,35 @@
 /dev/hwmap                       u:object_r:mrvl_cp_device:s0
 /dev/ramfile                     u:object_r:mrvl_cp_device:s0
 /dev/simple_dip                  u:object_r:mrvl_cp_device:s0
-/dev/block/platform/soc.2/by-name/NVM   u:object_r:mrvl_nvm_block_device:s0
+/data/misc/radio(/.*)?           u:object_r:radio_data_file:s0
+
+# GNSS
+/dev/cmsockdev[0-9]+             u:object_r:gps_device:s0
+/dev/crmdev[0-9]+                u:object_r:gps_device:s0
+/data/gps(/.*)?                  u:object_r:gps_data_file:s0
+
+# TrustZone
+/dev/tzdd                        u:object_r:tz_device:s0
+
+# GPU (Vivante galcore)
+/dev/galcore                     u:object_r:gpu_device:s0
+/dev/graphics/galcore            u:object_r:gpu_device:s0
+
+# Camera (B52 ISP media controller and subdevices), calibration cache, sysfs
+/dev/media[0-9]+                 u:object_r:video_device:s0
+/dev/v4l-subdev[0-9]+            u:object_r:video_device:s0
+/data/log/camera(/.*)?           u:object_r:camera_data_file:s0
+/sys/devices/virtual/camera(/.*)? u:object_r:sysfs_camera:s0
+
+# NFC
+/dev/sec-nfc                     u:object_r:nfc_device:s0
+/dev/bcm2079x                    u:object_r:nfc_device:s0
+/data/bcmnfc(/.*)?               u:object_r:nfc_data_file:s0
+
+# Sensors
+/dev/accelerometer_sensor        u:object_r:sensors_device:s0
+/dev/magnetic_sensor             u:object_r:sensors_device:s0
+/dev/proximity_sensor            u:object_r:sensors_device:s0
 
 # Marvell SD8777: BT (HCI over char dev), FM, debug; rfkill
 /dev/mbtchar[0-9]+               u:object_r:hci_attach_dev:s0
@@ -69,12 +70,6 @@
 /dev/mdebugchar[0-9]+            u:object_r:mrvl_wireless_device:s0
 /dev/rfkill                      u:object_r:rfkill_device:s0
 
-# Camera (B52 ISP media controller and subdevices)
-/dev/media[0-9]+                 u:object_r:video_device:s0
-/dev/v4l-subdev[0-9]+            u:object_r:video_device:s0
-
-# USB gadget serial
-/dev/ttyGS[0-9]+                 u:object_r:gadget_serial_device:s0
 
 # Marvell QoS / devfreq request nodes
 /dev/(axi|cci|clst_vl)_min                       u:object_r:mrvl_qos_device:s0
@@ -82,17 +77,7 @@
 /dev/(ddr|vpu)_devfreq_(max|min)                 u:object_r:mrvl_qos_device:s0
 /dev/gpu_freq_(2d|3d|sh)_(max|min)               u:object_r:mrvl_qos_device:s0
 
-# Marvell CP daemons (started by init / tel_launch.sh)
-/system/bin/eeh                  u:object_r:mrvl_tel_exec:s0
-/system/bin/nvm                  u:object_r:mrvl_tel_exec:s0
-/system/bin/diag                 u:object_r:mrvl_tel_exec:s0
-/system/bin/IMLLog               u:object_r:mrvl_tel_exec:s0
-/system/bin/cploader             u:object_r:mrvl_tel_exec:s0
-
-# Camera HAL calibration data (/data/log/camera/merged_otp_*.data)
-/data/log/camera(/.*)?           u:object_r:camera_data_file:s0
-
-# Partition nodes (by-name aliases are not applied on this device; numbers from by-name links)
+# Partitions (by-name aliases are not applied on this device; numbers from by-name links)
 /dev/block/mmcblk0p6             u:object_r:efs_block_device:s0
 /dev/block/mmcblk0p8             u:object_r:recovery_block_device:s0
 /dev/block/mmcblk0p9             u:object_r:boot_block_device:s0
@@ -101,6 +86,5 @@
 /dev/block/mmcblk0p16            u:object_r:system_block_device:s0
 /dev/block/mmcblk0p17            u:object_r:cache_block_device:s0
 /dev/block/mmcblk0p19            u:object_r:userdata_block_device:s0
-
-# Radio data written by rild (AOSP leaves it as system_data_file)
-/data/misc/radio(/.*)?                                        u:object_r:radio_data_file:s0
+/dev/block/platform/soc.2/by-name/EFS  u:object_r:efs_block_device:s0
+/dev/block/platform/soc.2/by-name/NVM  u:object_r:mrvl_nvm_block_device:s0

@@ -1,11 +1,12 @@
-type sensors_efs_file, file_type;
 type sysfs_camera, fs_type, sysfs_type;
-type sysfs_display, fs_type, sysfs_type;
-type sysfs_vibeamp, fs_type, sysfs_type;
-type wifi_efs_file, file_type;
-# Types the stock policy put on /efs (the labels are stored on the EFS partition itself).
+type gps_data_file, file_type, data_file_type;
+# Labels the stock firmware stored on its own partitions (/efs, /NVM). Declared so they map to
+# known types instead of "unlabeled"; the partitions themselves are never relabelled.
 type app_efs_file, file_type;
 type cpk_efs_file, file_type;
 type imei_efs_file, file_type;
 type prov_efs_file, file_type;
 type sec_efs_file, file_type;
+type wifi_efs_file, file_type;
+type nvm_data_file, file_type;
+type teesst_data_file, file_type;

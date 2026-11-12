@@ -1,7 +1,0 @@
-# device/marvell/sepolicy gives audioserver and energyawareness rw access to the
-# whole debugfs. N's domain.te forbids that except for qti_debugfs_domain in
-# userdebug/eng builds. Allow it there only; user builds need specific labels.
-userdebug_or_eng(`
-  typeattribute audioserver qti_debugfs_domain;
-  typeattribute energyawareness qti_debugfs_domain;
-')

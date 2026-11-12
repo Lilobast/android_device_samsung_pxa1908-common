@@ -1,0 +1,65 @@
+# Rules for AOSP / HAL domains, ported from the 14.1 policy (denials logged on coreprimevelte)
+# and mapped to Pie's HAL processes.
+
+# Vivante GPU: the node lives in /dev/graphics (galcore). Every GPU user must search the dir or
+# the blob fails to open it.
+allow { appdomain bootanim surfaceflinger system_server mediaserver mediacodec cameraserver
+        hal_graphics_allocator_default hal_graphics_composer_default } graphics_device:dir search;
+allow { mediaserver mediacodec hal_graphics_allocator_default } gpu_device:chr_file rw_file_perms;
+
+# Bluetooth HAL: Marvell SD8777 HCI char device, rfkill
+allow hal_bluetooth_default hci_attach_dev:chr_file rw_file_perms;
+allow hal_bluetooth_default rfkill_device:chr_file rw_file_perms;
+allow { system_server hal_wifi_supplicant_default } rfkill_device:chr_file r_file_perms;
+
+# e2fsck of the NVM and EFS partitions (init.pxa1908.tel.rc, fstab)
+allow fsck { mrvl_nvm_block_device efs_block_device }:blk_file rw_file_perms;
+
+# Camera HAL1 (stock, in mediaserver): media controller/subdevs, CODA JPEG (uio), OTP cache,
+# camera sysfs, its own service.camera.* properties
+allow mediaserver video_device:chr_file rw_file_perms;
+allow mediaserver uio_device:chr_file rw_file_perms;
+allow mediaserver camera_data_file:dir create_dir_perms;
+allow mediaserver camera_data_file:file create_file_perms;
+allow mediaserver sysfs_camera:dir search;
+allow mediaserver sysfs_camera:file rw_file_perms;
+set_prop(mediaserver, mrvl_camera_prop)
+allow ueventd sysfs_camera:file w_file_perms;
+
+# OMX (CODA7542 video codec) in media.codec
+allow mediacodec uio_device:chr_file rw_file_perms;
+
+# GNSS HAL (Marvell libgps): AT-GPS channel, chip channels, sockets in /data/gps shared with
+# gpslpm_srv; its GpsChipInit thread runs shell commands
+allow hal_gnss_default { at_device gps_device mrvl_cp_device }:chr_file rw_file_perms;
+allow hal_gnss_default gps_data_file:dir create_dir_perms;
+allow hal_gnss_default gps_data_file:sock_file create_file_perms;
+allow hal_gnss_default gpslpm_srv:unix_dgram_socket sendto;
+allow gpslpm_srv hal_gnss_default:unix_dgram_socket sendto;
+allow hal_gnss_default { shell_exec toolbox_exec }:file rx_file_perms;
+
+# Sensors HAL: input event nodes and the sensor char devices
+allow hal_sensors_default sensors_device:chr_file rw_file_perms;
+allow hal_sensors_default input_device:dir r_dir_perms;
+allow hal_sensors_default input_device:chr_file rw_file_perms;
+
+# rild (libsec-ril): modem channels, NV data and IMEI/CSC/factory data in /efs
+allow rild { at_device mrvl_cp_device }:chr_file rw_file_perms;
+allow rild self:capability dac_read_search;
+allow rild proc_net:file w_file_perms;
+allow rild efs_file:dir rw_dir_perms;
+allow rild efs_file:file create_file_perms;
+allow rild { app_efs_file cpk_efs_file imei_efs_file prov_efs_file sec_efs_file }:dir rw_dir_perms;
+allow rild { app_efs_file cpk_efs_file imei_efs_file prov_efs_file sec_efs_file }:file create_file_perms;
+dontaudit rild logcat_exec:file execute;
+
+# Sensor calibration and battery data in /efs/FactoryApp (read only)
+allow { system_server audioserver hal_sensors_default } { efs_file app_efs_file cpk_efs_file imei_efs_file prov_efs_file sec_efs_file }:dir r_dir_perms;
+allow { system_server audioserver hal_sensors_default } { efs_file app_efs_file cpk_efs_file imei_efs_file prov_efs_file sec_efs_file }:file r_file_perms;
+
+# init: Marvell modem/GPS/TZ setup writes
+allow init { gps_device tz_device }:chr_file { write ioctl };
+
+# Harmless
+dontaudit radio system_app_data_file:dir getattr;
+dontaudit hal_audio_default system_data_file:file { append open read };

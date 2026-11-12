@@ -1,5 +1,0 @@
-# Marvell GNSS: system_server (GPS HAL) <-> gpslpm_srv over unix sockets in /data/gps
-allow system_server gpslpm_srv:unix_dgram_socket sendto;
-allow gpslpm_srv system_server:unix_dgram_socket sendto;
-allow gpslpm_srv system_data_file:sock_file write;
-allow system_server system_data_file:sock_file write;

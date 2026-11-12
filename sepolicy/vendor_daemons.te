@@ -1,0 +1,44 @@
+# Marvell vendor daemons started by init. Each gets its own domain (Pie's init refuses to start
+# a service without one when enforcing). The modem/GPS/wireless stack is undocumented, so these
+# domains stay permissive individually, as on 14.1; the rest of the system is enforcing.
+
+# tel_launch.sh / run_composite.sh: boots the CP (modem)
+type marvelltel, domain;
+type marvelltel_exec, exec_type, file_type;
+init_daemon_domain(marvelltel)
+
+# CP daemons: eeh, nvm, diag, IMLLog, cploader
+type mrvl_tel, domain;
+type mrvl_tel_exec, exec_type, file_type;
+init_daemon_domain(mrvl_tel)
+domain_auto_trans(marvelltel, mrvl_tel_exec, mrvl_tel)
+
+type at_distributor, domain;
+type at_distributor_exec, exec_type, file_type;
+init_daemon_domain(at_distributor)
+
+type at_router, domain;
+type at_router_exec, exec_type, file_type;
+init_daemon_domain(at_router)
+
+type gpslpm_srv, domain;
+type gpslpm_srv_exec, exec_type, file_type;
+init_daemon_domain(gpslpm_srv)
+
+type mwirelessd, domain;
+type mwirelessd_exec, exec_type, file_type;
+init_daemon_domain(mwirelessd)
+
+type rtcc, domain;
+type rtcc_exec, exec_type, file_type;
+init_daemon_domain(rtcc)
+
+userdebug_or_eng(`
+  permissive marvelltel;
+  permissive mrvl_tel;
+  permissive at_distributor;
+  permissive at_router;
+  permissive gpslpm_srv;
+  permissive mwirelessd;
+  permissive rtcc;
+')

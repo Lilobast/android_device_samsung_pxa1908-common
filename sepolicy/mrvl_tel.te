@@ -1,8 +1,0 @@
-# Marvell CP (modem) daemons: eeh, nvm, diag, IMLLog, cploader.
-# Kept permissive: the modem stack is undocumented and RIL does not work yet; this domain
-# exists so the daemons no longer run in init's domain (which would stop them when enforcing).
-type mrvl_tel, domain;
-type mrvl_tel_exec, exec_type, file_type;
-init_daemon_domain(mrvl_tel)
-domain_auto_trans(marvelltel, mrvl_tel_exec, mrvl_tel)
-permissive mrvl_tel;

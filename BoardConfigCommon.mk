@@ -65,7 +65,7 @@ TARGET_UNIFIED_DEVICE := true
 # Pie bring-up: AOSP policy only, SELinux permissive (androidboot.selinux=permissive in
 # BoardConfig.mk). The 14.1 device policy depends on the Qualcomm-derived Marvell policy and
 # is being rewritten for Pie (notes/los16_port_plan.md).
-#BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
+BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
 # LiveDisplay tint is applied by hwcomposer.mrvl; SurfaceFlinger covers GLES-only frames
 TARGET_HWC_LIVEDISPLAY_TINT := true
 

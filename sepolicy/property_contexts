@@ -1,3 +1,5 @@
 # Stock camera HAL settings (service.camera.isp.mmu, .af, .zsl_mask, .logmask, ...)
 service.camera.                  u:object_r:mrvl_camera_prop:s0
 persist.service.camera.          u:object_r:mrvl_camera_prop:s0
+# LiveDisplay -> HWC colour matrix
+sys.livedisplay.                 u:object_r:livedisplay_prop:s0

@@ -1,1 +1,3 @@
 type mrvl_camera_prop, property_type;
+# LiveDisplay colour matrix handed from the LiveDisplay HAL to the HWC (in surfaceflinger)
+type livedisplay_prop, property_type;
