@@ -5,3 +5,6 @@ allow init sysfs_mrvl_vsync:file setattr;
 
 # DRM HAL probes vndbinder although it serves nothing there
 dontaudit hal_drm_default vndbinder_device:chr_file rw_file_perms;
+
+# init lowers the foreground LMK levels after boot (init.pxa1908.rc)
+allow init sysfs_lowmemorykiller:file w_file_perms;

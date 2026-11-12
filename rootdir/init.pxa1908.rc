@@ -511,3 +511,10 @@ on property:persist.sys.debug.dump=mid
 on property:persist.sys.debug.dump=high
     write /sys/power/panic CRASH_ENABLE
 
+# Low-memory killer: AOSP's 1 GB table kills even the foreground app when file cache drops
+# below 72 MB, although zram swap still has room (Firefox died on heavy pages). Keep the
+# background levels, lower foreground/visible/perceptible so swap absorbs the pressure first.
+# Written after boot, once ActivityManager has set its own table through lmkd.
+on property:sys.boot_completed=1
+    write /sys/module/lowmemorykiller/parameters/minfree 6144,8192,10240,12288,36864,46080
+
