@@ -1,0 +1,27 @@
+# Battery / charger / fuel gauge (healthd)
+genfscon sysfs /devices/platform/sec-battery.27/power_supply                                          u:object_r:sysfs_batteryinfo:s0
+genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4037000.i2c/i2c-2/2-0030/88pm88x-charger/power_supply u:object_r:sysfs_batteryinfo:s0
+genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4037000.i2c/i2c-2/2-0030/88pm88x-battery/power_supply u:object_r:sysfs_batteryinfo:s0
+
+# Panel backlight and notification LED (lights HAL)
+genfscon sysfs /devices/platform/ktd2801-bl.24/backlight                                              u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4037000.i2c/i2c-2/2-0030/88pm88x-rgb.0/leds      u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4037000.i2c/i2c-2/2-0030/88pm88x-rgb.1/leds      u:object_r:sysfs_leds:s0
+genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4037000.i2c/i2c-2/2-0030/88pm88x-rgb.2/leds      u:object_r:sysfs_leds:s0
+
+# Accelerometer / proximity input devices and the Samsung sensor class (sensors HAL)
+genfscon sysfs /devices/virtual/input                                                                 u:object_r:sysfs_sensors:s0
+genfscon sysfs /devices/virtual/sensors                                                               u:object_r:sysfs_sensors:s0
+
+# GPU and DDR frequency controls (power HAL boost)
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/c0400000.gpu                                       u:object_r:sysfs_mrvl_gpu:s0
+genfscon sysfs /devices/platform/soc.2/c0100000.devfreq-ddr                                           u:object_r:sysfs_mrvl_devfreq:s0
+
+# CODA7542 video codec uio maps (OMX in media.codec)
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/d420d000.coda7542/uio                             u:object_r:sysfs_uio:s0
+
+# eMMC I/O statistics (storaged)
+genfscon sysfs /devices/platform/soc.2/d4200000.axi/d4281000.sdh/mmc_host/mmc0/mmc0:0001/block/mmcblk0/stat u:object_r:sysfs_disk_stat:s0
+
+# Vivante per-process GPU memory (memtrack HAL)
+genfscon proc /driver/gcmem                                                                           u:object_r:proc_gcmem:s0

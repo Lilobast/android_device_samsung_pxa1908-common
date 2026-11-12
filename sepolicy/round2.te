@@ -1,0 +1,55 @@
+# Round 2: from permissive-mode denials on LOS16 (scripts/phone/sepolicy_exercise.sh, 2026-11-12)
+
+type sysfs_sensors, fs_type, sysfs_type;
+type sysfs_mrvl_gpu, fs_type, sysfs_type;
+type sysfs_mrvl_devfreq, fs_type, sysfs_type;
+type proc_gcmem, fs_type, proc_type;
+
+# Sensors HAL: enable / poll_delay / flush of the sensor input devices
+allow hal_sensors_default sysfs_sensors:dir r_dir_perms;
+allow hal_sensors_default sysfs_sensors:file rw_file_perms;
+allow hal_sensors_default sysfs_sensors:lnk_file read;
+
+# Power HAL: GPU 3D/2D and DDR minimum clocks for touch / launch boosts, interactive tuning
+allow hal_power_default { sysfs_mrvl_gpu sysfs_mrvl_devfreq }:dir r_dir_perms;
+allow hal_power_default { sysfs_mrvl_gpu sysfs_mrvl_devfreq }:file rw_file_perms;
+allow hal_power_default sysfs_devices_system_cpu:file rw_file_perms;
+
+# Memtrack HAL: Vivante per-process GPU memory and the ION carveout heap
+allow hal_memtrack_default proc_gcmem:dir r_dir_perms;
+allow hal_memtrack_default proc_gcmem:file r_file_perms;
+userdebug_or_eng(`
+  allow hal_memtrack_default debugfs:dir r_dir_perms;
+  allow hal_memtrack_default debugfs:file r_file_perms;
+')
+dontaudit hal_memtrack_default debugfs:file r_file_perms;
+
+# OMX: uio map sizes of the CODA7542
+allow mediacodec sysfs_uio:dir r_dir_perms;
+allow mediacodec sysfs_uio:file r_file_perms;
+allow mediacodec sysfs_uio:lnk_file read;
+
+# zygote preloads the Vivante GL driver
+allow zygote gpu_device:chr_file rw_file_perms;
+allow zygote graphics_device:dir search;
+
+# GNSS HAL keeps chip status in /data/system/gps
+type_transition hal_gnss_default system_data_file:dir gps_data_file "gps";
+allow hal_gnss_default system_data_file:dir rw_dir_perms;
+allow hal_gnss_default gps_data_file:file create_file_perms;
+
+# rild: reads its own data in /data/misc/radio and at_distributor's /proc entries
+allow rild radio_data_file:file r_file_perms;
+allow rild at_distributor:dir search;
+allow rild at_distributor:file r_file_perms;
+
+# init (rc writes): governors, DDR devfreq, input boost (debugfs), camera sysfs owners,
+# vm sysctls, exception-trace, /storage/sdcard symlink
+allow init sysfs:file { w_file_perms setattr };
+allow init { sysfs_mrvl_gpu sysfs_mrvl_devfreq sysfs_devices_system_cpu sysfs_leds sysfs_sensors }:file { w_file_perms setattr };
+allow init sysfs_camera:file setattr;
+allow init proc:file w_file_perms;
+allow init debugfs:file w_file_perms;
+allow init tmpfs:lnk_file create;
+allow init kernel:system module_request;
+type_transition gpslpm_srv system_data_file:dir gps_data_file "gps";

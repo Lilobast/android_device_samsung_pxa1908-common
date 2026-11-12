@@ -224,6 +224,10 @@ on post-fs-data
 
     # rild data (label from our file_contexts; the directory may predate it)
     restorecon_recursive /data/misc/radio
+    # Labels from the Pie device policy for dirs created before it existed
+    restorecon_recursive /data/gps
+    restorecon_recursive /data/system/gps
+    restorecon_recursive /data/log/camera
 
     #Power Meter: for duty cycle profiling
     chown system system /sys/kernel/debug/pxa/stat/cpu_dc_stat
