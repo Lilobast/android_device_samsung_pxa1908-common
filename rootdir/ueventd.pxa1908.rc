@@ -66,7 +66,7 @@
 /dev/kmsg 0660 root system
 
 # bluetooth
-/dev/mbtchar* 0660 system net_bt_stack
+/dev/mbtchar* 0660 bluetooth net_bt_stack
 
 # fm
 /dev/mfmchar* 0660 system system
