@@ -156,6 +156,7 @@ PRODUCT_PACKAGES += \
     libui_shim \
     libutils_shim \
     libcutils_shim \
+    libsecril_shim \
     libcamera_parameters_shim \
 
 # Permissions
