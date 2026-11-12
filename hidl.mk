@@ -56,12 +56,13 @@ PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-service \
     android.hardware.usb@1.0-service
 
-# NFC (Broadcom BCM20795: LineageOS wrapper around nfc_nci.bcm2079x) — disabled for now: Pie's
-# libnfc-nci and the Lollipop HAL disagree (nfc_ncif_update_window "Unexpected call", NCI command
-# timeouts) and com.android.nfc aborted on every timeout. Re-enable together with pxa1908-common.mk.
-#PRODUCT_PACKAGES += \
-#    android.hardware.nfc@1.0-impl-bcm \
-#    android.hardware.nfc@1.0-service
+# NFC (Broadcom BCM20795): LineageOS wrapper around nfc_nci.bcm2079x, which is the open-source
+# halimpl (hardware/broadcom/nfc, ro.hardware.nfc_nci.bcm2079x=default). The Lollipop Samsung
+# blob (nfc_nci.bcm2079x.PXA19xx) and Pie's libnfc-nci disagreed (unexpected NCI responses).
+PRODUCT_PACKAGES += \
+    android.hardware.nfc@1.0-impl-bcm \
+    android.hardware.nfc@1.0-service \
+    nfc_nci.bcm2079x.default
 
 # Wi-Fi: no vendor HAL (BOARD_WLAN_DEVICE unset -> libwifi-hal fallback, which fails IWifi
 # start). Without IWifi in the manifest the framework runs wificond + supplicant only; the

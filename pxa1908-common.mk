@@ -180,6 +180,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+    frameworks/native/data/etc/android.hardware.nfc.hce.xml:system/etc/permissions/android.hardware.nfc.hce.xml \
+    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
     frameworks/native/data/etc/android.software.webview.xml:system/etc/permissions/android.software.webview.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
 
@@ -244,14 +246,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libgpucsc \
 
-# NFC — disabled for now (see hidl.mk)
-#PRODUCT_PACKAGES += \
-#    NfcNci \
-#    Tag \
-#    com.android.nfc_extras
-#
-#PRODUCT_COPY_FILES += \
-#    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
+# NFC
+PRODUCT_PACKAGES += \
+    NfcNci \
+    Tag \
+    com.android.nfc_extras
+
+PRODUCT_COPY_FILES += \
+    frameworks/base/nfc-extras/com.android.nfc_extras.xml:system/etc/permissions/com.android.nfc_extras.xml
 
 # FMRadio
 PRODUCT_PACKAGES += \
