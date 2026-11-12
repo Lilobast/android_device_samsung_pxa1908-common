@@ -229,6 +229,8 @@ on post-fs-data
     restorecon_recursive /data/system/gps
     restorecon_recursive /data/log/camera
     restorecon_recursive /data/nfc
+    # TWRP leaves its logs in /cache/recovery unlabelled; system_server deletes them at boot
+    restorecon_recursive /cache/recovery
 
     #Power Meter: for duty cycle profiling
     chown system system /sys/kernel/debug/pxa/stat/cpu_dc_stat

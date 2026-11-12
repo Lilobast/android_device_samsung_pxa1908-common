@@ -1,0 +1,7 @@
+# Round 5: enforcing exercise run (2026-11-12)
+
+# init chowns the HWC vsync node in rc
+allow init sysfs_mrvl_vsync:file setattr;
+
+# DRM HAL probes vndbinder although it serves nothing there
+dontaudit hal_drm_default vndbinder_device:chr_file rw_file_perms;
