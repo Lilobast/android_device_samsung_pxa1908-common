@@ -8,3 +8,7 @@ dontaudit hal_drm_default vndbinder_device:chr_file rw_file_perms;
 
 # init lowers the foreground LMK levels after boot (init.pxa1908.rc)
 allow init sysfs_lowmemorykiller:file w_file_perms;
+
+# TWRP leaves unlabelled files in /cache/recovery after every flash; restorecon_recursive skips
+# the dir once its digest is recorded, so let system_server delete them as AOSP intends.
+allow system_server unlabeled:file unlink;
