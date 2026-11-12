@@ -7,4 +7,12 @@
 <resources>
     <!-- 0 = off, 1 = night, 2 = auto, 3 = outdoor, 4 = day -->
     <integer name="config_defaultLiveDisplayMode">2</integer>
+
+    <!-- Physical home key, capacitive back and recents (sec_touchscreen.kl):
+         HOME 1 + BACK 2 + APP_SWITCH 16 -->
+    <integer name="config_deviceHardwareKeys">19</integer>
+
+    <!-- Home wakes the screen like on stock; volume wake stays a user option.
+         HOME 1 + VOLUME 64 -->
+    <integer name="config_deviceHardwareWakeKeys">65</integer>
 </resources>

@@ -63,9 +63,10 @@ PRODUCT_PACKAGES += \
 #    android.hardware.nfc@1.0-impl-bcm \
 #    android.hardware.nfc@1.0-service
 
-# Wi-Fi (HIDL wifi HAL with the generic libwifi-hal; supplicant/hostapd over HIDL)
+# Wi-Fi: no vendor HAL (BOARD_WLAN_DEVICE unset -> libwifi-hal fallback, which fails IWifi
+# start). Without IWifi in the manifest the framework runs wificond + supplicant only; the
+# sd8777 firmware is loaded at boot by the kernel/MarvellWirelessDaemon.
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
     wificond
 
 # LiveDisplay (colour calibration through the HW composer, sys.livedisplay.rgb)
