@@ -19,10 +19,13 @@ service at_distributor /system/bin/at_distributor
     user root
     group radio misc log
 
+# Pie runs the GNSS HAL as gps (its socket /data/gps/s_gnss is gps 0700); as system the LPM
+# server got EACCES and the HAL retried every 2 s (log spam, wakeups). The system group keeps
+# access to /data/gps (system 0771).
 service gpslpm_srv /system/bin/gpslpm_srv
     class main
-    user system
-    group system
+    user gps
+    group gps system
 
 # LPM
 service marvelltel_lpm /system/bin/tel_lpm.sh
