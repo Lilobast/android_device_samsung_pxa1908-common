@@ -192,7 +192,7 @@ static void power_init(__attribute__((unused)) struct power_module *module)
             if( is_pm_supported(control, runtime) )
             {
                 ALOGD("%s support runtime pm", *device_path);
-                TS_POWER = realloc(TS_POWER, sizeof(char**)*TS_NUMBER+1);
+                TS_POWER = realloc(TS_POWER, sizeof(*TS_POWER) * (TS_NUMBER + 1));
                 TS_POWER[TS_NUMBER++] = *device_path;
             }
             else

@@ -22,10 +22,11 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
     android.hardware.bluetooth@1.0-service
 
-# Camera (HAL1 through the legacy provider)
+# Camera (HAL1 through the legacy provider).
+# The provider service is left out until the camera is ported: on Pie it crash-looped and
+# re-initialised the sensor and torch on every restart.
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service \
     camera.device@1.0-impl
 
 # DRM
