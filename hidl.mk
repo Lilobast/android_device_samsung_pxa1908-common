@@ -56,10 +56,12 @@ PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-service \
     android.hardware.usb@1.0-service
 
-# NFC (Broadcom BCM20795: LineageOS wrapper around nfc_nci.bcm2079x)
-PRODUCT_PACKAGES += \
-    android.hardware.nfc@1.0-impl-bcm \
-    android.hardware.nfc@1.0-service
+# NFC (Broadcom BCM20795: LineageOS wrapper around nfc_nci.bcm2079x) — disabled for now: Pie's
+# libnfc-nci and the Lollipop HAL disagree (nfc_ncif_update_window "Unexpected call", NCI command
+# timeouts) and com.android.nfc aborted on every timeout. Re-enable together with pxa1908-common.mk.
+#PRODUCT_PACKAGES += \
+#    android.hardware.nfc@1.0-impl-bcm \
+#    android.hardware.nfc@1.0-service
 
 # Wi-Fi (HIDL wifi HAL with the generic libwifi-hal; supplicant/hostapd over HIDL)
 PRODUCT_PACKAGES += \
