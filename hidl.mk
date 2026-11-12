@@ -22,9 +22,9 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
     android.hardware.bluetooth@1.0-service
 
-# Camera (HAL1 through the legacy provider).
-# The provider service is left out until the camera is ported: on Pie it crash-looped and
-# re-initialised the sensor and torch on every restart.
+# Camera (HAL1 through the legacy provider). No provider service: CameraService runs in
+# mediaserver (NO_CAMERA_SERVER, as on 14.1, so the HAL shares the process with the OMX encoder
+# for recording) and loads the legacy provider passthrough.
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl
