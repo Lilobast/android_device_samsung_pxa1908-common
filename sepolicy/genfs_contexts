@@ -37,3 +37,6 @@ genfscon sysfs /devices/platform/soc.2/d4000000.apb/d4013800.i2c/i2c-3/3-0050/in
 
 # HWC vsync (surfaceflinger)
 genfscon sysfs /devices/platform/soc.2/d4200000.axi/fbbase.3/vsync                                     u:object_r:sysfs_mrvl_vsync:s0
+
+# Marvell SD8777 Wi-Fi module parameters (MarvellWirelessDaemon writes mac_addr, ps_mode, ...)
+genfscon sysfs /module/sd8777/parameters                                                             u:object_r:sysfs_mrvl_wifi:s0

@@ -1,6 +1,8 @@
 # Marvell vendor daemons started by init. Each gets its own domain (Pie's init refuses to start
 # a service without one when enforcing). The modem/GPS/wireless stack is undocumented, so these
 # domains stay permissive individually, as on 14.1; the rest of the system is enforcing.
+# Round 6 (2026-11-13) added rules for all of them, but enforcing mwirelessd and rtcc broke
+# Wi-Fi and zram swap with denials the logs did not show, so they stay permissive too.
 
 # tel_launch.sh / run_composite.sh: boots the CP (modem)
 type marvelltel, domain;

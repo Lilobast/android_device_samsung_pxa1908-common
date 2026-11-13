@@ -3,3 +3,10 @@ service.camera.                  u:object_r:mrvl_camera_prop:s0
 persist.service.camera.          u:object_r:mrvl_camera_prop:s0
 # LiveDisplay -> HWC colour matrix
 sys.livedisplay.                 u:object_r:livedisplay_prop:s0
+
+# Marvell telephony scripts/daemons (tel_launch.sh, run_composite.sh, eeh)
+marvell.ril.                     u:object_r:mrvl_tel_prop:s0
+ro.sys.exist.cp                  u:object_r:mrvl_tel_prop:s0
+sys.baseband                     u:object_r:mrvl_tel_prop:s0
+sys.usb.diagmodem                u:object_r:mrvl_tel_prop:s0
+sys.telephony.default.loglevel   u:object_r:mrvl_tel_prop:s0

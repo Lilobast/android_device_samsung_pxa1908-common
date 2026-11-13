@@ -1,0 +1,83 @@
+# Round 6 (2026-11-13): rules for the Marvell vendor daemons from their permissive-mode denials
+# (boot, Wi-Fi/BT toggles, airplane-mode modem restart). mwirelessd and rtcc are fully exercised
+# by these, but all stay permissive: enforcing mwirelessd still broke Wi-Fi (next layer: BT params
+# under /sys/module/mbt8777, its socket dir /data/misc/wireless) and enforcing rtcc left zram swap
+# off with no denial logged (dontaudit). The modem daemons (marvelltel, mrvl_tel, at_distributor,
+# at_router) and gpslpm_srv need a SIM test and an outdoor GPS session first.
+
+# Properties set by the vendor scripts/daemons
+type mrvl_tel_prop, property_type;
+# Read by rild/libsec-ril, the audio HAL and others, as before when these were default/system_prop.
+get_prop(domain, mrvl_tel_prop)
+
+# --- mwirelessd (MarvellWirelessDaemon: Wi-Fi/BT power and driver state) ---
+# Second pass: these were missing from the first capture (early-boot denials are dropped by the
+# kernel's printk rate limit); found by flushing the AVC (setenforce 0/1) and restarting it.
+set_prop(mwirelessd, wifi_prop)
+allow mwirelessd self:capability { setgid setuid dac_override };
+allow mwirelessd efs_file:dir search;
+allow mwirelessd wifi_efs_file:dir search;
+allow mwirelessd wifi_efs_file:file r_file_perms;
+# sd8777 module parameters (mac_addr, ps_mode, auto_ds, mfg_mode, cfg80211_wext): own label so
+# the daemon can write them without write access to all of sysfs; the MAC stays hidden from apps.
+type sysfs_mrvl_wifi, fs_type, sysfs_type;
+allow mwirelessd sysfs_mrvl_wifi:dir r_dir_perms;
+allow mwirelessd sysfs_mrvl_wifi:file rw_file_perms;
+# init hands the parameters to system (chown/chmod in init.wifi.rc) before the daemon starts.
+allow init sysfs_mrvl_wifi:dir r_dir_perms;
+allow init sysfs_mrvl_wifi:file { r_file_perms setattr };
+# Bluetooth address on /efs, read at startup for the BT side.
+allow mwirelessd bluetooth_efs_file:dir search;
+allow mwirelessd bluetooth_efs_file:file r_file_perms;
+allow mwirelessd sysfs:dir r_dir_perms;
+allow mwirelessd sysfs_net:dir r_dir_perms;
+allow mwirelessd sysfs_net:file r_file_perms;
+
+# --- rtcc (rtccd3: shell script run once at boot; sets up zram swap and the rtcc tunables) ---
+# From the script itself (the logs missed most of these): zram disksize, mkswap + swapon on
+# /dev/block/zram0, vm.page-cluster, chown of the rtcc trigger/params to system, grade table.
+allow rtcc shell_exec:file rx_file_perms;
+allow rtcc toolbox_exec:file rx_file_perms;
+allow rtcc self:capability { sys_admin chown fowner dac_override };
+allow rtcc ram_device:blk_file rw_file_perms;
+allow rtcc sysfs_zram:dir search;
+allow rtcc sysfs_zram:file rw_file_perms;
+allow rtcc proc_page_cluster:file rw_file_perms;
+allow rtcc sysfs_rtc:dir search;
+allow rtcc sysfs_rtc:file { getattr setattr };
+allow rtcc sysfs:dir search;
+allow rtcc sysfs:file { rw_file_perms setattr };
+
+# --- gpslpm_srv (GPS low-power-mode server) ---
+allow gpslpm_srv gps_data_file:dir rw_dir_perms;
+allow gpslpm_srv gps_data_file:sock_file { create_file_perms };
+allow gpslpm_srv gps_device:chr_file rw_file_perms;
+
+# --- marvelltel (tel_launch.sh / run_composite.sh) ---
+allow marvelltel marvelltel_exec:file execute_no_trans;
+set_prop(marvelltel, mrvl_tel_prop)
+set_prop(marvelltel, log_tag_prop)
+set_prop(marvelltel, radio_prop)
+set_prop(marvelltel, ctl_start_prop)
+set_prop(marvelltel, ctl_stop_prop)
+allow marvelltel sysfs_batteryinfo:dir r_dir_perms;
+allow marvelltel sysfs_batteryinfo:file { getattr setattr };
+
+# --- mrvl_tel (eeh, nvm, diag, IMLLog, cploader) ---
+set_prop(mrvl_tel, mrvl_tel_prop)
+allow mrvl_tel self:capability setgid;
+allow mrvl_tel proc_cmdline:file r_file_perms;
+
+# --- at_distributor ---
+set_prop(at_distributor, radio_prop)
+allow at_distributor self:capability dac_override;
+allow at_distributor radio_data_file:dir r_dir_perms;
+allow at_distributor radio_data_file:file r_file_perms;
+allow at_distributor serial_device:chr_file rw_file_perms;
+wakelock_use(at_distributor)
+
+# --- at_router ---
+# Its init sockets (atil, atil2, embmsd in /dev/socket) need a file_type label: init may not
+# create sockets labelled socket_device on Pie, so they were never created before.
+type mrvl_at_socket, file_type;
+allow at_router at_device:chr_file rw_file_perms;
