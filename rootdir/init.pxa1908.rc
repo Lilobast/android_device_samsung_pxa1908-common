@@ -433,9 +433,13 @@ on property:ro.debug_level=0x4f4c
     # set ring buf size to 4KB * 4 = 16KB
     write /sys/kernel/debug/tracing/buffer_size_kb 4
 
+# The charger runs as root in the charger domain, which Pie's policy may not give dac_override:
+# it reaches /dev/graphics/fb0 (system:media 0660, see ueventd) through the media group instead.
+# Without it minui gets no display and the charger crashes, so init reboots out of charging mode.
 service charger /sbin/charger
     class charger
     critical
+    group root graphics media
     seclabel u:r:charger:s0
 #    class_start sec_charger
 

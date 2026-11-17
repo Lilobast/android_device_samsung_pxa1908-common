@@ -7,3 +7,7 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 
 # Charger
 BOARD_CHARGING_MODE_BOOTING_LPM := true
+
+# mmpfb returns EINVAL for the FBIOPUT_VSCREENINFO page flip of minui (healthd charger);
+# pan to the drawn buffer instead.
+BOARD_RECOVERY_NEEDS_FBIOPAN_DISPLAY := true
